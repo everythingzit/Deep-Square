@@ -9,3 +9,9 @@ class Board:
     
     def set_fen(self, fen: str):
         self.board = Board(fen)
+
+    def next_move(self):
+        pass
+
+    def get_legal_moves(self):
+        pass
