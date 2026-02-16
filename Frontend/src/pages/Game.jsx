@@ -1,6 +1,6 @@
 import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import "../styles/Game.css"
 import { use } from "react"
 
@@ -32,7 +32,9 @@ function Game() {
         }
 
         const data = await response.json()
-        console.log(data)
+        const gameAfterMove = new Chess(data.fen)
+        setGame(gameAfterMove)
+        setPosition(gameAfterMove.fen())
     } catch (e) {
         console.error("Error getting next engine move: ", e)
     } finally {
@@ -149,7 +151,7 @@ function Game() {
 
         return
     }
-  }, [origin])
+  }, [origin, game])
 
   const boardOptions = {
     position: position,

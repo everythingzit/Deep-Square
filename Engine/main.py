@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from logic.board import Board
 
 class Item(BaseModel):
     fen: str
@@ -26,4 +27,7 @@ app.add_middleware(
 
 @app.post("/api/next-move")
 async def create_item(item: Item):
-    return "yay"
+    board = Board(item.fen)
+    return {
+        "fen": board.next_move()
+    }
