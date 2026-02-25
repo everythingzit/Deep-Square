@@ -1,0 +1,62 @@
+class Evaluator:
+    def __init__(self):
+        pass
+
+    # main function; takes in a FEN/board -> returns an integer score
+    # positive score: good for white
+    # negative score: good for black
+    def evaluate(self, board):
+        pass
+
+    def fen_to_matrix(self, fen):
+        pieces_string = fen.split()[0]
+        board_ranks = pieces_string.split("/")
+        board_matrix = [self.string_to_rank(rank_string) for rank_string in board_ranks]
+
+        return board_matrix
+    
+    def string_to_rank(self, rank_string):
+        rank = []
+        for character in rank_string:
+            if character.isdigit():
+                rank += [0] * int(character)
+            else:
+                rank.append(character)
+
+        return rank
+
+    def get_game_phase(self):
+        pass
+
+    def king_safety_score(self):
+        pass
+
+    def material_score(self):
+        pass
+
+    def piece_square_score(self):
+        pass
+
+    def pawn_structure_score(self):
+        pass
+
+    def threats_score(self):
+        pass
+
+    def mobility_score(self):
+        pass
+
+    def center_control_score(self):
+        pass
+
+    def space_control_score(self):
+        pass
+
+    def pawn_weakness_score(self):
+        pass
+
+    def piece_coordination_score(self):
+        pass
+
+# eval = Evaluator()
+# print(eval.fen_to_matrix("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"))

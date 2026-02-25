@@ -2,7 +2,6 @@ import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
 import { useState, useCallback, useMemo } from "react"
 import "../styles/Game.css"
-import { use } from "react"
 
 function Game() {
   const [game, setGame] = useState(new Chess())
