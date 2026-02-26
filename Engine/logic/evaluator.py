@@ -44,6 +44,8 @@ class Evaluator:
                 else:
                     score += bc.PIECE_VALUES[piece.lower()]
 
+        return score
+
 
     def piece_square_score(self, matrix):
         pass
