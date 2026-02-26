@@ -7,8 +7,12 @@ class Evaluator:
     # main function; takes in a FEN/board -> returns an integer score
     # positive score: good for white
     # negative score: good for black
-    def evaluate(self, board):
-        pass
+    def evaluate(self, fen):
+        matrix = self.fen_to_matrix(fen)
+        score = self.material_score(matrix)
+        score += self.piece_square_score(matrix)
+
+        return score
 
     def fen_to_matrix(self, fen):
         pieces_string = fen.split()[0]

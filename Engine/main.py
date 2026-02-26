@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from logic.board import Board
+from logic.search import Search
 
 class Item(BaseModel):
     fen: str
@@ -27,7 +28,8 @@ app.add_middleware(
 
 @app.post("/api/next-move")
 async def create_item(item: Item):
-    board = Board(item.fen)
+    # board = Board(item.fen)
+    search = Search()
     return {
-        "fen": board.next_move()
+        "fen": search.get_best_move(item.fen, 3)
     }
