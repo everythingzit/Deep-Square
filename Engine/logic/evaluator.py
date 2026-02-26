@@ -35,6 +35,7 @@ class Evaluator:
 
     def material_score(self, matrix):
         score = 0
+
         for rank in matrix:
             for piece in rank:
                 if piece is None:
@@ -48,7 +49,39 @@ class Evaluator:
 
 
     def piece_square_score(self, matrix):
-        pass
+        score = 0
+
+        for rank_index, rank in enumerate(matrix):
+            for file_index, piece in enumerate(rank):
+                if piece is None:
+                    continue
+                
+                is_white = piece.isupper()
+                piece = piece.lower()
+                
+                match piece:
+                    case "k":
+                        # TODO: implement game phase check
+                        pst = bc.KING_MIDDLE_VALUES
+                    case "p":
+                        pst = bc.PAWN_VALUES
+                    case "n":
+                        pst = bc.KNIGHT_VALUES
+                    case "b":
+                        pst = bc.BISHOP_VALUES
+                    case "r":
+                        pst = bc.ROOK_VALUES
+                    case "q":
+                        pst = bc.QUEEN_VALUES
+                    case _:
+                        raise ValueError(f"Invalid piece value: {piece}")
+                    
+                if is_white:
+                    score += pst[rank_index][file_index]
+                else:
+                    score -= pst[7 - rank_index][file_index]
+
+        return score
 
     def pawn_structure_score(self, matrix):
         pass
@@ -70,6 +103,3 @@ class Evaluator:
 
     def piece_coordination_score(self, matrix):
         pass
-
-# eval = Evaluator()
-# matrix = eval.fen_to_matrix("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2")
