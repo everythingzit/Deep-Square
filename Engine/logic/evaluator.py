@@ -1,3 +1,5 @@
+import constants.board_constants as bc
+
 class Evaluator:
     def __init__(self):
         pass
@@ -19,44 +21,53 @@ class Evaluator:
         rank = []
         for character in rank_string:
             if character.isdigit():
-                rank += [0] * int(character)
+                rank += [None] * int(character)
             else:
                 rank.append(character)
 
         return rank
 
-    def get_game_phase(self):
+    def get_game_phase(self, matrix):
         pass
 
-    def king_safety_score(self):
+    def king_safety_score(self, matrix):
         pass
 
-    def material_score(self):
+    def material_score(self, matrix):
+        score = 0
+        for rank in matrix:
+            for piece in rank:
+                if piece is None:
+                    pass
+                elif piece.islower():
+                    score -= bc.PIECE_VALUES[piece]
+                else:
+                    score += bc.PIECE_VALUES[piece.lower()]
+
+
+    def piece_square_score(self, matrix):
         pass
 
-    def piece_square_score(self):
+    def pawn_structure_score(self, matrix):
         pass
 
-    def pawn_structure_score(self):
+    def threats_score(self, matrix):
         pass
 
-    def threats_score(self):
+    def mobility_score(self, matrix):
         pass
 
-    def mobility_score(self):
+    def center_control_score(self, matrix):
         pass
 
-    def center_control_score(self):
+    def space_control_score(self, matrix):
         pass
 
-    def space_control_score(self):
+    def pawn_weakness_score(self, matrix):
         pass
 
-    def pawn_weakness_score(self):
-        pass
-
-    def piece_coordination_score(self):
+    def piece_coordination_score(self, matrix):
         pass
 
 # eval = Evaluator()
-# print(eval.fen_to_matrix("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"))
+# matrix = eval.fen_to_matrix("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2")
