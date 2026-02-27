@@ -14,7 +14,9 @@ class Search:
         alpha = -math.inf
         beta = math.inf
         
-        for move in board.legal_moves:
+        ordered_moves = self.move_ordering(board)
+
+        for move in ordered_moves:
             if board.turn == chess.WHITE:
                 board.push(move)
                 evaluation = self.minimax(board, depth - 1, alpha, beta, False)
@@ -42,12 +44,14 @@ class Search:
 
     def minimax(self, board: chess.Board, depth, alpha, beta, maximizing_player):
         if depth == 0:
-            return self.evaluator.evaluate(board.fen())
+            return self.quiescence_search(board, alpha, beta, maximizing_player)
+        
+        ordered_moves = self.move_ordering(board)
         
         if maximizing_player:
             max_evaluation = -math.inf
 
-            for move in board.legal_moves:
+            for move in ordered_moves:
                 board.push(move)
                 evaluation = self.minimax(board, depth - 1, alpha, beta, False)
                 board.pop()
@@ -61,7 +65,7 @@ class Search:
         else:
             min_evaluation = math.inf
 
-            for move in board.legal_moves:
+            for move in ordered_moves:
                 board.push(move)
                 evaluation = self.minimax(board, depth - 1, alpha, beta, True)
                 board.pop()
@@ -73,8 +77,97 @@ class Search:
             
             return min_evaluation
 
-    def move_ordering(self):
-        pass
+    def move_ordering(self, board: chess.Board):
+        piece_values = {
+            chess.PAWN: 1,
+            chess.KNIGHT: 3,
+            chess.BISHOP: 3,
+            chess.ROOK: 5,
+            chess.QUEEN: 9,
+            chess.KING: 20
+        }
 
-    def quiescence_search(self):
-        pass
+        moves = board.legal_moves
+        moves_scores = []
+
+        for move in moves:
+            score = 0
+
+            if move.promotion:
+                score += 100000
+
+            if board.is_capture(move):
+                victim = board.piece_at(move.to_square)
+                attacker = board.piece_at(move.from_square)
+
+                if victim and attacker:
+                    victim_value = piece_values[victim.piece_type]
+                    attacker_value = piece_values[attacker.piece_type]
+
+                    score += 10000 + (victim_value * 10) - attacker_value
+
+            moves_scores.append({"move": move, "score": score})
+        
+        sorted_moves = sorted(moves_scores, key=lambda move: move["score"], reverse=True)
+        sorted_moves_list = [graded_move["move"] for graded_move in sorted_moves]
+
+        return sorted_moves_list
+
+
+
+
+    def quiescence_search(self, board: chess.Board, alpha, beta, maximizing_player):
+        stand_pat = self.evaluator.evaluate(board.fen())
+
+        if board.is_game_over():
+            return stand_pat
+        
+        if maximizing_player:
+            if stand_pat >= beta:
+                return beta
+            
+            alpha = max(alpha, stand_pat)
+            best = stand_pat
+            
+            ordered_moves = self.move_ordering(board)
+            captures = [move for move in ordered_moves if board.is_capture(move) or move.promotion]
+            
+            for move in captures:
+                board.push(move)
+                score = self.quiescence_search(board, alpha, beta, False)
+                board.pop()
+                
+                if score > best:
+                    best = score
+
+                alpha = max(alpha, score)
+
+                if alpha >= beta:
+                    break
+            
+            return best
+        
+        else:
+            if stand_pat <= alpha:
+                return alpha
+            
+            beta = min(beta, stand_pat)
+            best = stand_pat
+            
+            ordered_moves = self.move_ordering(board)
+            captures = [move for move in ordered_moves if board.is_capture(move) or move.promotion]
+            
+            for move in captures:
+                board.push(move)
+                score = self.quiescence_search(board, alpha, beta, True)
+                board.pop()
+                
+                if score < best:
+                    best = score
+
+                beta = min(beta, score)
+
+                if alpha >= beta:
+                    break
+            
+            return best
