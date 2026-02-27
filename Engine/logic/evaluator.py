@@ -9,7 +9,7 @@ class Evaluator:
     # negative score: good for black
     def evaluate(self, fen):
         matrix = self.fen_to_matrix(fen)
-        score = self.material_score(matrix)
+        score = self.material_score(matrix) * 50
         score += self.piece_square_score(matrix)
 
         return score
