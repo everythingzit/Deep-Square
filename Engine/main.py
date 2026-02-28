@@ -31,5 +31,5 @@ async def create_item(item: Item):
     # board = Board(item.fen)
     search = Search()
     return {
-        "fen": search.get_best_move(item.fen, 3)
+        "engine_move": search.get_best_move(item.fen, 3),
     }

@@ -13,8 +13,15 @@ class Search:
         best_evaluation = -math.inf if board.turn == chess.WHITE else math.inf
         alpha = -math.inf
         beta = math.inf
+
+        if board.is_game_over():
+            return {
+                "fen": board.fen(),
+                "move": None
+            }
         
         ordered_moves = self.move_ordering(board)
+        best_move = ordered_moves[0]
 
         for move in ordered_moves:
             if board.turn == chess.WHITE:
@@ -33,16 +40,38 @@ class Search:
                 evaluation = self.minimax(board, depth - 1, alpha, beta, True)
                 board.pop()
 
+                # print(f"Move: {move.uci()}, Eval: {evaluation}, Best: {best_evaluation}")
+
                 if evaluation < best_evaluation:
                     best_evaluation = evaluation
                     best_move = move
 
                 beta = min(beta, evaluation)
 
-        board.push(best_move)
-        return board.fen()
+        engine_move = None
+
+        if best_move:
+            board.push(best_move)
+            engine_move = {
+                "fen": board.fen(),
+                "move": best_move.uci()
+            }
+
+        else:
+            engine_move = {
+                "fen": board.fen(),
+                "move": None
+            }
+
+        return engine_move
+
 
     def minimax(self, board: chess.Board, depth, alpha, beta, maximizing_player):
+        if board.is_checkmate():
+            return -math.inf if maximizing_player else math.inf
+        if board.is_stalemate() or board.is_insufficient_material():
+            return 0
+
         if depth == 0:
             return self.quiescence_search(board, alpha, beta, maximizing_player)
         
@@ -117,6 +146,9 @@ class Search:
 
 
     def quiescence_search(self, board: chess.Board, alpha, beta, maximizing_player):
+        if board.is_checkmate():
+            return -math.inf if maximizing_player else math.inf
+
         stand_pat = self.evaluator.evaluate(board.fen())
 
         if board.is_game_over():
