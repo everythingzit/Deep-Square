@@ -6,3 +6,44 @@ nav {
     align-items: center;
     padding: 0.5rem 4rem;
 }
+
+/* === DARK ELEGANT === */
+nav {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.8rem 4rem;
+}
+
+nav h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--accent-gold);
+    margin: 0;
+    letter-spacing: 0.05em;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: flex;
+    gap: 2rem;
+}
+
+nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+
+nav a:hover {
+    color: var(--accent-gold);
+}

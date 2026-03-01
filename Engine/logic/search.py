@@ -68,7 +68,8 @@ class Search:
 
     def minimax(self, board: chess.Board, depth, alpha, beta, maximizing_player):
         if board.is_checkmate():
-            return -math.inf if maximizing_player else math.inf
+            return (-math.inf + board.ply()) if maximizing_player else (math.inf - board.ply())
+        
         if board.is_stalemate() or board.is_insufficient_material():
             return 0
 
@@ -147,7 +148,7 @@ class Search:
 
     def quiescence_search(self, board: chess.Board, alpha, beta, maximizing_player):
         if board.is_checkmate():
-            return -math.inf if maximizing_player else math.inf
+            return (-math.inf + board.ply()) if maximizing_player else (math.inf - board.ply())
 
         stand_pat = self.evaluator.evaluate(board.fen())
 
@@ -162,7 +163,7 @@ class Search:
             best = stand_pat
             
             ordered_moves = self.move_ordering(board)
-            captures = [move for move in ordered_moves if board.is_capture(move) or move.promotion]
+            captures = [move for move in ordered_moves if board.is_capture(move) or move.promotion or board.gives_check(move)]
             
             for move in captures:
                 board.push(move)

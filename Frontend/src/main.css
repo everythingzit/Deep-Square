@@ -17,3 +17,24 @@ main {
     flex: 1;
     min-height: 0;
 }
+
+/* === DARK ELEGANT THEME === */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap');
+
+:root {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #1c2333;
+    --accent-gold: #f0a500;
+    --accent-gold-dim: #b87a00;
+    --border-color: #30363d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #484f58;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Raleway', sans-serif;
+}

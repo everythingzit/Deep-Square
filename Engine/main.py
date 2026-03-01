@@ -3,12 +3,11 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from logic.board import Board
 from logic.search import Search
+from config.database import collection
 
-class Item(BaseModel):
+class MoveReq(BaseModel):
     fen: str
-    color: int
     depth: int
-
 
 app = FastAPI()
 
@@ -27,9 +26,21 @@ app.add_middleware(
 
 
 @app.post("/api/next-move")
-async def create_item(item: Item):
-    # board = Board(item.fen)
+async def next_move(game: MoveReq):
     search = Search()
     return {
-        "engine_move": search.get_best_move(item.fen, 3),
+        "engine_move": search.get_best_move(game.fen, game.depth)
     }
+
+@app.post("/api/games")
+async def store_game(game: dict):
+    result = await collection.insert_one(game)
+    return { "id": str(result.inserted_id) }
+
+@app.get("/api/games")
+async def get_games():
+    games = []
+    async for game in collection.find():
+        game["_id"] = str(game["_id"])
+        games.append(game)
+    return games

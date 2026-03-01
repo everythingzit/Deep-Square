@@ -10,8 +10,8 @@ function Header() {
         <li>
             <Link>Play</Link>
             <Link>History</Link>
-            <Link>Analytics</Link>
-            <Link>Wiki</Link>
+            {/* <Link>Analytics</Link>
+            <Link>Wiki</Link> */}
         </li>
     </ul>
   </nav>;

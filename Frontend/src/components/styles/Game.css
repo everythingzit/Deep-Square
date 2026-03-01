@@ -123,3 +123,77 @@ section {
     width: 90%;
     padding: 0.8rem;
 }
+
+/* === DARK ELEGANT === */
+main {
+    background-color: var(--bg-primary);
+    padding: 3rem 0;
+}
+
+section {
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+/* Move log */
+#move-log-container div {
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-primary);
+    border-radius: 2px;
+}
+
+.move-white {
+    background-color: #c8d5e8;
+    color: #0d1117;
+}
+
+.move-black {
+    background-color: #4a5568;
+    color: #e6edf3;
+}
+
+#move-log-container p {
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+}
+
+/* Timer / turn */
+#timer-turn-container span {
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-primary);
+    border-radius: 2px;
+}
+
+#timer-turn-container p {
+    color: var(--text-primary);
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem !important;
+}
+
+/* Buttons */
+#controls-container button {
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    border-radius: 2px;
+}
+
+#controls-container button:hover {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+}
+
+/* Board squares */
+/* Edit these in boardOptions in Game.jsx: */
+/*
+    darkSquareStyle: { backgroundColor: "#4a5568" }
+    lightSquareStyle: { backgroundColor: "#c8d5e8" }
+*/

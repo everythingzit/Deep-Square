@@ -12,7 +12,22 @@ function Game() {
     const [isGameActive, setIsGameActive] = useState(false)
     const [movesPlayed, setMovesPlayed] = useState([])
     const [gameTimer, setGameTimer] = useState(0)
+    const [gameStatus, setGameStatus] = useState("Game Status")
+    // const [gameStarted, setGameStarted] = useState(false)
+    const [playerColor, setPlayerColor] = useState("w")
     const gameTimerRef = useRef(0)
+    const isGameActiveRef = useRef(false)
+
+    useEffect(() => {
+        if (!isGameActive) return
+        if (game.isGameOver()) {
+            handleGameOver(
+                game.isCheckmate() ? "checkmate" :
+                    game.isStalemate() ? "stalemate" :
+                        game.isDraw() ? "draw" : "unknown"
+            )
+        }
+    }, [game])
 
     useEffect(() => {
         if (!isGameActive) {
@@ -29,6 +44,11 @@ function Game() {
         return () => clearInterval(interval)
     }, [isGameActive])
 
+    const setIsGameActiveSync = useCallback((value) => {
+        isGameActiveRef.current = value
+        setIsGameActive(value)
+    }, [])
+
     const formatTimer = useCallback((seconds) => {
         const m = Math.floor(seconds / 60).toString().padStart(2, "0")
         const s = (seconds % 60).toString().padStart(2, "0")
@@ -44,14 +64,35 @@ function Game() {
         k: "King"
     };
 
-    const newGame = useCallback(() => {
-        const newBoard = new Chess()
-        setGame(newBoard)
-        setPosition(newBoard.fen())
+    const handleGameOver = useCallback((reason) => {
+        setIsGameActiveSync(false)
+        setThinking(false)
         setOrigin(null)
         setOptions({})
-        setThinking(false)
-        setIsGameActive(true)
+        setGameStatus(reason)
+
+        // if (reason === "aborted") return
+
+        const gameData = {
+            result: reason,
+            winner: reason === "checkmate"
+                ? (game.turn() === "w" ? "black" : "white")
+                : null,
+            player_color: playerColor,
+            duration: gameTimerRef.current,
+            total_moves: movesPlayed.length,
+            pgn: game.pgn(),
+            fen: game.fen(),
+            date: new Date().toISOString(),
+            engine_depth: 3,
+            moves: movesPlayed
+        }
+
+        fetch("http://localhost:8000/api/games", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(gameData)
+        })
     }, [])
 
     const getNextMove = useCallback(async (currentGame) => {
@@ -66,7 +107,7 @@ function Game() {
                 body: JSON.stringify({
                     fen: currentGame.fen(),
                     color: 1,
-                    depth: 0
+                    depth: 3
                 })
             })
 
@@ -76,9 +117,7 @@ function Game() {
 
             const data = await response.json()
 
-            if (!data.engine_move?.move) {
-                console.log("GAME OVER")
-                setIsGameActive(false)
+            if (!data.engine_move?.move || !isGameActiveRef.current) {
                 return
             }
 
@@ -98,9 +137,30 @@ function Game() {
         }
     }, [game])
 
+    const newGame = useCallback(() => {
+        const color = Math.random() < 0.5 ? "w" : "b"
+        setPlayerColor(color)
+
+        const newBoard = new Chess()
+        setGame(newBoard)
+        setPosition(newBoard.fen())
+        setOrigin(null)
+        setOptions({})
+        setThinking(false)
+        setMovesPlayed([])
+        setGameTimer(0)
+        setGameStatus("Game Status")
+        gameTimerRef.current = 0
+        setIsGameActiveSync(true)
+
+        if (color === "b") {
+            getNextMove(newBoard)
+        }
+    }, [getNextMove])
+
     const onDrop = useCallback(async (moveData) => {
         try {
-            if (thinking) {
+            if (thinking || !isGameActiveRef.current) {
                 return false
             }
 
@@ -146,8 +206,12 @@ function Game() {
 
         const newSquares = {}
         moves.forEach(move => {
-            newSquares[move.to] = {
-                background: 'rgba(0, 255, 0, 0.4)'
+            const targetPiece = game.get(move.to)
+
+            newSquares[move.to] = targetPiece ? {
+                background: "radial-gradient(circle, transparent 58%, rgba(0,0,0,0.25) 58%, rgba(0,0,0,0.25) 72%, transparent 72%)",
+            } : {
+                background: "radial-gradient(circle, rgba(0,0,0,0.2) 18%, transparent 18%)",
             }
         })
 
@@ -158,7 +222,7 @@ function Game() {
     }, [game])
 
     const onClick = useCallback(async (squareData) => {
-        if (thinking) {
+        if (thinking || !isGameActiveRef.current) {
             return false
         }
 
@@ -225,27 +289,22 @@ function Game() {
         onSquareClick: onClick,
         squareStyles: options,
         darkSquareStyle: {
-            backgroundColor: "#7b7b7b",
+            backgroundColor: "#4a5568",
         },
         lightSquareStyle: {
-            backgroundColor: "#ffffff",
+            backgroundColor: "#c8d5e8",
         },
-        arePiecesDraggable: !thinking
+        arePiecesDraggable: !thinking && isGameActive,
+        boardOrientation: playerColor === "w" ? "white" : "black"
     }
 
     return (
         <>
-            {
-                !isGameActive ? (<section id="chess-game-disabled">
-                    <button onClick={newGame}>
-                        Start Game
-                    </button>
-                </section>) : (<section>
-                    <Chessboard
-                        options={boardOptions}
-                    />
-                </section>)
-            }
+            <section>
+                <Chessboard
+                    options={boardOptions}
+                />
+            </section>
             <section id="game-information-section">
                 <div id="move-log-container">
                     <div>
@@ -267,15 +326,21 @@ function Game() {
                         </span>
                         <span>
                             <p>
-                                {game.turn()}
+                                {isGameActive ? game.turn() : gameStatus}
                             </p>
                         </span>
                     </div>
                 </div>
                 <div id="controls-container">
-                    <button>
-                        Abort Game
-                    </button>
+                    {
+                        isGameActive ?
+                            <button onClick={() => handleGameOver("aborted")}>
+                                ABORT GAME
+                            </button> :
+                            <button onClick={newGame}>
+                                NEW GAME
+                            </button>
+                    }
                 </div>
             </section>
         </>
