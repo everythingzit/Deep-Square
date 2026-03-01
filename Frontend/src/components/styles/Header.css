@@ -1,0 +1,8 @@
+nav {
+    background: rgb(168, 168, 168);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 4rem;
+}

@@ -1,6 +1,6 @@
 import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import "./styles/Game.css"
 
 function Game() {
@@ -10,6 +10,39 @@ function Game() {
     const [options, setOptions] = useState({})
     const [thinking, setThinking] = useState(false)
     const [isGameActive, setIsGameActive] = useState(false)
+    const [movesPlayed, setMovesPlayed] = useState([])
+    const [gameTimer, setGameTimer] = useState(0)
+    const gameTimerRef = useRef(0)
+
+    useEffect(() => {
+        if (!isGameActive) {
+            return
+        }
+
+        const interval = setInterval(() => {
+            setGameTimer(time => {
+                gameTimerRef.current = time + 1
+                return time + 1
+            })
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [isGameActive])
+
+    const formatTimer = useCallback((seconds) => {
+        const m = Math.floor(seconds / 60).toString().padStart(2, "0")
+        const s = (seconds % 60).toString().padStart(2, "0")
+        return `${m}:${s}`
+    }, [])
+
+    const pieces = {
+        p: "Pawn",
+        n: "Knight",
+        b: "Bishop",
+        r: "Rook",
+        q: "Queen",
+        k: "King"
+    };
 
     const newGame = useCallback(() => {
         const newBoard = new Chess()
@@ -54,6 +87,10 @@ function Game() {
             gameAfterMove.move(data.engine_move.move)
             setGame(gameAfterMove)
             setPosition(gameAfterMove.fen())
+            const history = gameAfterMove.history({ verbose: true }).map(move => ({ ...move }))
+            const lastMove = history[history.length - 1]
+            lastMove.time = formatTimer(gameTimerRef.current)
+            setMovesPlayed(prev => [...prev, lastMove]);
         } catch (e) {
             console.error("Error getting next engine move: ", e)
         } finally {
@@ -79,6 +116,10 @@ function Game() {
             if (move) {
                 setGame(gameCopy)
                 setPosition(gameCopy.fen())
+                const history = gameCopy.history({ verbose: true }).map(move => ({ ...move }))
+                const lastMove = history[history.length - 1]
+                lastMove.time = formatTimer(gameTimerRef.current)
+                setMovesPlayed(prev => [...prev, lastMove]);
 
                 await getNextMove(gameCopy)
 
@@ -160,6 +201,10 @@ function Game() {
 
             setGame(gameCopy)
             setPosition(gameCopy.fen())
+            const history = gameCopy.history({ verbose: true }).map(move => ({ ...move }))
+            const lastMove = history[history.length - 1]
+            lastMove.time = formatTimer(gameTimerRef.current)
+            setMovesPlayed(prev => [...prev, lastMove]);
             setOrigin(null)
             setOptions({})
 
@@ -191,7 +236,7 @@ function Game() {
     return (
         <>
             {
-                !isGameActive ? (<section>
+                !isGameActive ? (<section id="chess-game-disabled">
                     <button onClick={newGame}>
                         Start Game
                     </button>
@@ -201,21 +246,35 @@ function Game() {
                     />
                 </section>)
             }
-            <section>
-                <div>
-                    Move Log
+            <section id="game-information-section">
+                <div id="move-log-container">
+                    <div>
+                        {movesPlayed.map((move, index) => (
+                            <span key={index} className={move.color === "w" ? "move-white" : "move-black"}>
+                                <p>{Math.floor(index / 2) + 1}. {move.lan}</p>
+                                <p>{pieces[move.piece.toLowerCase()]}</p>
+                                <p>{move.time}</p>
+                            </span>
+                        ))}
+                    </div>
                 </div>
-                <div>
-                    <p>
-                        Timer
-                    </p>
-                    <p>
-                        Color Turn
-                    </p>
+                <div id="timer-turn-container">
+                    <div>
+                        <span>
+                            <p>
+                                {formatTimer(gameTimer)}
+                            </p>
+                        </span>
+                        <span>
+                            <p>
+                                {game.turn()}
+                            </p>
+                        </span>
+                    </div>
                 </div>
-                <div>
+                <div id="controls-container">
                     <button>
-                        Start Game
+                        Abort Game
                     </button>
                 </div>
             </section>

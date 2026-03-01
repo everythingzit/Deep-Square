@@ -1,6 +1,8 @@
+import "./styles/Footer.css"
+
 function Footer() {
   return <footer>
-    <div>
+    <div className="footer-link-container">
         <h3>
             Deep Square
         </h3>
@@ -17,7 +19,7 @@ function Footer() {
             Wiki
         </a>
     </div>
-    <div>
+    <div className="footer-link-container">
         <h3>
             Social
         </h3>
@@ -34,7 +36,7 @@ function Footer() {
             Devpost
         </a>
     </div>
-    <div>
+    <div className="footer-link-container">
         <h3>
             Contact
         </h3>

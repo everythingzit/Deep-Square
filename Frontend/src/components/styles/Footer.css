@@ -1,0 +1,18 @@
+footer {
+     background: rgb(168, 168, 168);
+     display: flex;
+     flex-flow: row nowrap;
+     justify-content: space-around;
+     align-items: flex-start;
+     padding: 3rem 0;
+}
+
+.footer-link-container {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.footer-link-container p,
+.footer-link-container h3{
+    margin: 0;
+}

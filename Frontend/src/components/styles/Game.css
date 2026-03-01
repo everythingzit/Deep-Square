@@ -1,3 +1,125 @@
 #chessboard-board {
-    width: 600px !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+main {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    min-height: 700px;
+    padding: 4rem 0;
+}
+
+#chess-game-disabled {
+    background-image: url("../../assets/empty_board.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#chess-game-disabled button {
+    height: 3rem;
+    width: 10rem;
+}
+
+section {
+    width: 40%;
+    border: solid 1px black;
+    height: 600px;
+    width: 600px;
+    margin: 1rem;
+}
+
+#game-information-section {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: stretch;
+}
+
+#move-log-container {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#move-log-container div {
+    border: solid 1px black;
+    width: 90%;
+    height: 95%;
+    max-height: 465px;
+    overflow-y: scroll;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+#move-log-container span {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#move-log-container p {
+    margin: 0;
+    padding: 0.5rem 0;
+    width: 20%;
+    text-align: left;
+}
+
+.move-white {
+    background-color: white;
+    color: black;
+}
+
+.move-black {
+    background-color: gray;
+    color: white
+}
+
+#timer-turn-container{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#timer-turn-container div {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+#timer-turn-container p {
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+#timer-turn-container span {
+    border: solid 1px black;
+    width: 47%;
+}
+
+#controls-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#controls-container button {
+    width: 90%;
+    padding: 0.8rem;
 }
