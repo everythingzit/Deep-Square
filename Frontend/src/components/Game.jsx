@@ -26,7 +26,7 @@ function Game() {
     const userId = useRef(null)
     const movesPlayedRef = useRef([])
 
-    const VITE_API_URL = import.meta.env.VITE_API_URL
+    const VITE_API_URL = "https://deep-square-backend.onrender.com"
 
     const generateRandomUsername = () => {
         const adjectives = ["Silent", "Swift", "Dark", "Iron", "Bold", "Clever", "Fierce", "Petit"]

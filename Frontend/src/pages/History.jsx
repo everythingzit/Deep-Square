@@ -11,7 +11,7 @@ function History() {
     const [winLossData, setWinLossData] = useState([])
     const [timePerPieceData, setTimePerPieceData] = useState([])
 
-    const VITE_API_URL = import.meta.env.VITE_API_URL
+    const VITE_API_URL = "https://deep-square-backend.onrender.com"
 
     useEffect(() => {
         (async () => {
