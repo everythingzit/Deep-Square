@@ -1,0 +1,278 @@
+#chessboard-board {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#play-main {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    min-height: 600px;
+}
+
+/* #chess-game-disabled {
+    background-image: url("../../assets/empty_board.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+
+/* #chess-game-disabled button {
+    height: 3rem;
+    width: 10rem;
+} */
+
+#play-main section {
+    width: 40%;
+    border: solid 1px black;
+    height: 600px;
+    width: 600px;
+    margin: 1rem;
+}
+
+#game-information-section {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#username-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#move-log-container {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#move-log-container div {
+    border: solid 1px black;
+    width: 90%;
+    height: 95%;
+    max-height: 375px;
+    overflow-y: scroll;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+#move-log-container span {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#move-log-container p {
+    margin: 0;
+    padding: 0.5rem 0;
+    width: 20%;
+    text-align: left;
+}
+
+.move-white {
+    background-color: white;
+    color: black;
+}
+
+.move-black {
+    background-color: gray;
+    color: white
+}
+
+#timer-turn-container{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#timer-turn-container div {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+#timer-turn-container p {
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+#timer-turn-container span {
+    border: solid 1px black;
+    width: 47%;
+}
+
+#controls-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#controls-container button {
+    width: 90%;
+    padding: 0.8rem;
+}
+
+/* ====== */
+#play-main {
+    background-color: var(--bg-primary);
+    padding: 4rem 0;
+}
+
+#play-main section {
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+#move-log-container div {
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-primary);
+    border-radius: 2px;
+}
+
+.move-white {
+    background-color: #c8d5e8;
+    color: #0d1117;
+}
+
+.move-black {
+    background-color: #4a5568;
+    color: #e6edf3;
+}
+
+#move-log-container p {
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+}
+
+/* Timer / turn */
+#timer-turn-container span {
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-primary);
+    border-radius: 2px;
+}
+
+#timer-turn-container p {
+    color: var(--text-primary);
+    font-size: 1.3rem !important;
+}
+
+/* Buttons */
+#controls-container button {
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    border-radius: 2px;
+}
+
+#controls-container button:hover {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+}
+
+#username-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#username-container p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+#username-container input {
+    background: var(--bg-primary);
+    border: 1px solid var(--accent-gold);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 2px;
+    outline: none;
+    width: 60%;
+}
+
+#username-container button {
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+#username-container button:hover {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+}
+
+.status-white {
+    background: #f0f0f0 !important;
+    border: 1px solid #f0f0f0 !important;
+}
+.status-white p { color: #0d1117 !important; }
+
+.status-black {
+    background: #1a1a1a !important;
+    border: 1px solid #484f58 !important;
+}
+.status-black p { color: #e6edf3 !important; }
+
+.status-checkmate-win {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border: 1px solid #22c55e !important;
+}
+.status-checkmate-win p { color: #22c55e !important; }
+
+.status-checkmate-loss {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid #ef4444 !important;
+}
+.status-checkmate-loss p { color: #ef4444 !important; }
+
+.status-draw {
+    background: rgba(234, 179, 8, 0.15) !important;
+    border: 1px solid #eab308 !important;
+}
+.status-draw p { color: #eab308 !important; }
+
+.status-aborted {
+    background: rgba(148, 163, 184, 0.1) !important;
+    border: 1px solid #64748b !important;
+}
+.status-aborted p { color: #64748b !important; }

@@ -1,0 +1,147 @@
+#history-main {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 600px;
+    padding: 3rem 2rem;
+    gap: 1.5rem;
+    background-color: var(--bg-primary);
+}
+
+#history-main section {
+    flex: 1;
+    min-width: 500px;
+}
+
+#history-left {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow-y: auto;
+    max-height: calc(100vh - 8rem);
+    padding: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    font-weight: 500;
+}
+
+tbody tr {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    display: table-row;
+    transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+    background: var(--bg-tertiary);
+}
+
+td {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+}
+
+td.winner-user {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+td.winner-engine {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+td.winner-draw {
+    color: #eab308;
+    font-weight: 600;
+}
+
+td.winner-aborted {
+    color: #64748b;
+    font-weight: 600;
+}
+
+tbody tr.result-win {
+    border-left: 3px solid #ef4444;
+}
+
+tbody tr.result-loss {
+    border-left: 3px solid #22c55e;
+}
+
+tbody tr.result-draw {
+    border-left: 3px solid #eab308;
+}
+
+tbody tr.result-aborted {
+    border-left: 3px solid #64748b;
+}
+
+td button {
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+td button:hover {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+}
+
+#history-right {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    min-height: 400px;
+    position: sticky;
+    top: 1.5rem;
+}
+
+#history-right {
+    padding: 1rem;
+}
+
+#history-right h2 {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    margin: 1.5rem 0 0.5rem 0.5rem;
+}
+
+#history-right h2:first-child {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 1100px) {
+    #history-right {
+        position: static;
+    }
+}

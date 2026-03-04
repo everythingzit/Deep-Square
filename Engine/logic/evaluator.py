@@ -11,6 +11,7 @@ class Evaluator:
         matrix = self.fen_to_matrix(fen)
         score = self.material_score(matrix) * 50
         score += self.piece_square_score(matrix)
+        score += self.king_safety_score(matrix)
 
         return score
 
@@ -35,7 +36,55 @@ class Evaluator:
         pass
 
     def king_safety_score(self, matrix):
-        pass
+        score = 0
+        white_king_position = None
+        black_king_position = None
+
+        for r, rank in enumerate(matrix):
+            for f, piece in enumerate(rank):
+                if piece == 'K':
+                    white_king_position = (r, f)
+                elif piece == 'k':
+                    black_king_position = (r, f)
+        
+        if not white_king_position or not black_king_position:
+            return 0
+        
+        MAX_DISTANCE = 7
+        
+        for r, rank in enumerate(matrix):
+            for f, piece in enumerate(rank):
+                if piece is None or piece.islower():
+                    continue
+                
+                piece_type = piece.lower()
+                if piece_type not in bc.PIECE_VALUES:
+                    continue
+                
+                dr = abs(r - black_king_position[0])
+                df = abs(f - black_king_position[1])
+                distance = max(dr, df)
+                
+                tropism = (MAX_DISTANCE - distance) * bc.PIECE_VALUES[piece_type]
+                score += tropism
+        
+        for r, rank in enumerate(matrix):
+            for f, piece in enumerate(rank):
+                if piece is None or piece.isupper():
+                    continue
+                
+                piece_type = piece.lower()
+                if piece_type not in bc.PIECE_VALUES:
+                    continue
+                
+                dr = abs(r - white_king_position[0])
+                df = abs(f - white_king_position[1])
+                distance = max(dr, df)
+                
+                tropism = (MAX_DISTANCE - distance) * bc.PIECE_VALUES[piece_type]
+                score -= tropism
+        
+        return score
 
     def material_score(self, matrix):
         score = 0

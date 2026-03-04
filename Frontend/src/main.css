@@ -1,0 +1,39 @@
+#root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    min-width: 675px;
+}
+
+main {
+    flex: 1;
+    min-height: 0;
+}
+
+/* === DARK ELEGANT THEME === */
+:root {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #1c2333;
+    --accent-gold: #f0a500;
+    --accent-gold-dim: #b87a00;
+    --border-color: #30363d;
+    --text-primary: #e6edf3;
+    --text-secondary: #b0bec5;
+    --text-muted: #484f58;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Monaco, Consolas, monospace;
+}
