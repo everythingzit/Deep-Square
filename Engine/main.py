@@ -17,6 +17,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:5173",
+    "https://deep-square.onrender.com"
 ]
 
 app.add_middleware(

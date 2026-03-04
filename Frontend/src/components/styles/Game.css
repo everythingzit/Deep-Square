@@ -276,3 +276,13 @@
     border: 1px solid #64748b !important;
 }
 .status-aborted p { color: #64748b !important; }
+
+@keyframes flash-fill {
+    0%   { background: transparent; color: var(--accent-gold); transform: scale(1); }
+    40%  { background: var(--accent-gold); color: var(--bg-primary); transform: scale(1.04); }
+    100% { background: transparent; color: var(--accent-gold); transform: scale(1); }
+}
+
+#controls-container button.flash {
+    animation: flash-fill 0.7s ease;
+}
