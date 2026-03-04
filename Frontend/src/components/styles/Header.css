@@ -21,7 +21,7 @@ nav div {
 nav {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
-    padding: 0.8rem 4rem;
+    padding: 1rem 4rem;
 }
 
 nav h1 {
@@ -56,4 +56,14 @@ nav a {
 
 nav a:hover {
     color: var(--accent-gold);
+}
+
+nav a.active::after {
+    content: "•";
+    display: block;
+    text-align: center;
+    color: var(--accent-gold);
+    font-size: 0.85rem;
+    line-height: 0;
+    margin-top: 0.7rem;
 }

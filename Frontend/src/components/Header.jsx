@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./styles/Header.css"
 import logo from "../assets/DEEPSQUARE_LOGO.jpg"
 
@@ -10,8 +10,8 @@ function Header() {
     </div>
     <ul>
         <li>
-            <Link to={"/"}>Play</Link>
-            <Link to={"/analytics"}>Analytics</Link>
+            <NavLink to={"/"}>Play</NavLink>
+            <NavLink to={"/analytics"}>Analytics</NavLink>
             {/* <Link>Analytics</Link>
             <Link>Wiki</Link> */}
         </li>
