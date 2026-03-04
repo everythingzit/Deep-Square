@@ -154,7 +154,7 @@ function Game() {
             fen: game.fen(),
             date: new Date().toISOString(),
             engine_depth: 3,
-            moves: movesPlayedRef
+            moves: movesPlayedRef.current
         }
 
         fetch("http://localhost:8000/api/games", {
@@ -199,6 +199,7 @@ function Game() {
             const history = gameAfterMove.history({ verbose: true }).map(move => ({ ...move }))
             const lastMove = history[history.length - 1]
             lastMove.time = formatTimer(gameTimerRef.current)
+            lastMove.rawTime = gameTimerRef.current
 
             setMovesPlayed(prev => {
                 const updated = [...prev, lastMove]
@@ -257,6 +258,7 @@ function Game() {
                 const history = gameCopy.history({ verbose: true }).map(move => ({ ...move }))
                 const lastMove = history[history.length - 1]
                 lastMove.time = formatTimer(gameTimerRef.current)
+                lastMove.rawTime = gameTimerRef.current
 
                 setMovesPlayed(prev => {
                     const updated = [...prev, lastMove]
@@ -351,6 +353,7 @@ function Game() {
             const history = gameCopy.history({ verbose: true }).map(move => ({ ...move }))
             const lastMove = history[history.length - 1]
             lastMove.time = formatTimer(gameTimerRef.current)
+            lastMove.rawTime = gameTimerRef.current
             setOrigin(null)
             setOptions({})
 

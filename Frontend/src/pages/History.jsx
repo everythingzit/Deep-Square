@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react"
 import "./styles/History.css"
 import Loading from "../components/Loading"
+import WinLossChart from "../components/WinLossChart"
+import TimePerPieceChart from "../components/TimePerPieceChart"
 
 function History() {
     const [games, setGames] = useState([])
     const [loading, setLoading] = useState(true)
     const [users, setUsers] = useState({})
+    const [winLossData, setWinLossData] = useState([])
+    const [timePerPieceData, setTimePerPieceData] = useState([])
 
     useEffect(() => {
         (async () => {
@@ -33,6 +37,9 @@ function History() {
 
                 setUsers(usersMap)
                 setGames(gamesData)
+
+                setWinLossData(computeWinLoss(gamesData))
+                setTimePerPieceData(computeTimePerPiece(gamesData))
             } catch (e) {
                 // navigate to error page
             } finally {
@@ -40,6 +47,67 @@ function History() {
             }
         })()
     }, [])
+
+    const computeWinLoss = (games) => {
+        const counts = { wins: 0, losses: 0, draws: 0 }
+
+        for (const game of games) {
+            if (game.result === "aborted") {
+                continue
+            } else if (game.result === "draw" || game.result === "stalemate") {
+                counts.draws++
+            } else if (game.result === "checkmate") {
+                if (game.winner[0] !== game.player_color) {
+                    counts.wins++
+                } else {
+                    counts.losses++
+                }
+            }
+        }
+
+        return [
+            { name: "Wins", value: counts.wins },
+            { name: "Losses", value: counts.losses },
+            { name: "Draws", value: counts.draws },
+        ]
+    }
+
+    const computeTimePerPiece = (games) => {
+        const pieceData = {
+            p: { total: 0, count: 0 },
+            n: { total: 0, count: 0 },
+            b: { total: 0, count: 0 },
+            r: { total: 0, count: 0 },
+            q: { total: 0, count: 0 },
+            k: { total: 0, count: 0 }
+        }
+
+        for (const game of games) {
+            if (!game.moves || game.moves.length === 0) continue
+
+            for (let i = 0; i < game.moves.length; i++) {
+                const move = game.moves[i]
+                if (move.color === game.player_color) continue
+
+                const piece = move.piece.toLowerCase()
+                if (!pieceData[piece]) continue
+
+                const timeTaken = i === 0
+                    ? move.rawTime
+                    : move.rawTime - game.moves[i - 1].rawTime
+
+                pieceData[piece].total += timeTaken
+                pieceData[piece].count++
+            }
+        }
+
+        const pieceNames = { p: "Pawn", n: "Knight", b: "Bishop", r: "Rook", q: "Queen", k: "King" }
+
+        return Object.entries(pieceData).map(([piece, data]) => ({
+            subject: pieceNames[piece],
+            avgTime: data.count > 0 ? Math.round(data.total / data.count) : 0
+        }))
+    }
 
     const copyPGN = (pgn) => {
         navigator.clipboard.writeText(pgn)
@@ -125,7 +193,16 @@ function History() {
                     </tbody>
                 </table>
             </section>
-            <section id="history-right"></section>
+            <section id="history-right">
+                <h2>
+                    DEEP SQUARE WIN/LOSS/DRAW
+                </h2>
+                <WinLossChart data={winLossData} />
+                <h2>
+                    AVERAGE TIME PER MOVE BY PIECE
+                </h2>
+                <TimePerPieceChart data={timePerPieceData} />
+            </section>
         </main>
     )
 }

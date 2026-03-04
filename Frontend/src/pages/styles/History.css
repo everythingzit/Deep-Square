@@ -124,6 +124,22 @@ td button:hover {
     top: 1.5rem;
 }
 
+#history-right {
+    padding: 1rem;
+}
+
+#history-right h2 {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    margin: 1.5rem 0 0.5rem 0.5rem;
+}
+
+#history-right h2:first-child {
+    margin-top: 0.5rem;
+}
+
 @media (max-width: 1100px) {
     #history-right {
         position: static;
