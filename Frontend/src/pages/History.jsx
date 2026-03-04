@@ -199,7 +199,7 @@ function History() {
                 </h2>
                 <WinLossChart data={winLossData} />
                 <h2>
-                    AVERAGE TIME PER MOVE BY PIECE
+                    AVERAGE TIME PER MOVE BY PIECE (seconds)
                 </h2>
                 <TimePerPieceChart data={timePerPieceData} />
             </section>
