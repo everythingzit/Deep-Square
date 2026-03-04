@@ -18,12 +18,15 @@ function Game() {
     const [username, setUsername] = useState("Anonymous")
     const [usernameInput, setUsernameInput] = useState("")
     const [playerColor, setPlayerColor] = useState("w")
+    const [buttonFlash, setButtonFlash] = useState(false)
     const [loading, setLoading] = useState(true)
     const gameTimerRef = useRef(0)
     const isGameActiveRef = useRef(false)
     const playerColorRef = useRef("w")
     const userId = useRef(null)
     const movesPlayedRef = useRef([])
+
+    const VITE_API_URL = import.meta.env.VITE_API_URL
 
     const generateRandomUsername = () => {
         const adjectives = ["Silent", "Swift", "Dark", "Iron", "Bold", "Clever", "Fierce", "Petit"]
@@ -39,12 +42,12 @@ function Game() {
 
                 if (storedId) {
                     userId.current = storedId
-                    const response = await fetch(`http://localhost:8000/api/users/${storedId}`)
+                    const response = await fetch(`${VITE_API_URL}/api/users/${storedId}`)
                     const data = await response.json()
                     if (!data.error) setUsername(data.username)
                 } else {
                     const generatedUsername = generateRandomUsername()
-                    const response = await fetch("http://localhost:8000/api/users", {
+                    const response = await fetch(`${VITE_API_URL}/api/users`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ username: generatedUsername })
@@ -70,7 +73,7 @@ function Game() {
     const handleSaveUsername = useCallback(async () => {
         if (!usernameInput.trim()) return
         try {
-            await fetch(`http://localhost:8000/api/users/${userId.current}`, {
+            await fetch(`${VITE_API_URL}/api/users/${userId.current}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username: usernameInput })
@@ -157,7 +160,7 @@ function Game() {
             moves: movesPlayedRef.current
         }
 
-        fetch("http://localhost:8000/api/games", {
+        fetch(`${VITE_API_URL}/api/games`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(gameData)
@@ -169,7 +172,7 @@ function Game() {
         setThinking(true)
 
         try {
-            const response = await fetch("http://localhost:8000/api/next-move", {
+            const response = await fetch(`${VITE_API_URL}/api/next-move`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -389,13 +392,22 @@ function Game() {
         boardOrientation: playerColor === "w" ? "white" : "black"
     }
 
+    const handleBoardClick = useCallback(() => {
+        if (isGameActive) {
+            return
+        }
+
+        setButtonFlash(true)
+        setTimeout(() => setButtonFlash(false), 700)
+    }, [isGameActive])
+
     if (loading) {
         return <main id="play-main"><Loading /></main>
     }
 
     return (
         <>
-            <section>
+            <section onClick={handleBoardClick}>
                 <Chessboard
                     options={boardOptions}
                 />
@@ -453,7 +465,7 @@ function Game() {
                             <button onClick={() => handleGameOver("aborted")}>
                                 ABORT GAME
                             </button> :
-                            <button onClick={newGame}>
+                            <button className={buttonFlash ? "flash" : ""} onClick={newGame}>
                                 NEW GAME
                             </button>
                     }

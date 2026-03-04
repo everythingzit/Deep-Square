@@ -11,10 +11,12 @@ function History() {
     const [winLossData, setWinLossData] = useState([])
     const [timePerPieceData, setTimePerPieceData] = useState([])
 
+    const VITE_API_URL = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         (async () => {
             try {
-                const response = await fetch("http://localhost:8000/api/games")
+                const response = await fetch(`${VITE_API_URL}/api/games`)
 
                 if (!response.ok) throw new Error("Failed to fetch games")
                 const gamesData = await response.json()
@@ -28,7 +30,7 @@ function History() {
 
                 const usersMap = {}
                 for (const userId of userIds) {
-                    const userResponse = await fetch(`http://localhost:8000/api/users/${userId}`)
+                    const userResponse = await fetch(`${VITE_API_URL}/api/users/${userId}`)
                     if (userResponse.ok) {
                         const userData = await userResponse.json()
                         usersMap[userId] = userData.username
