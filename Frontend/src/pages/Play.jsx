@@ -1,7 +1,7 @@
 import Game from "../components/Game";
 
 function Play() {
-  return <main>
+  return <main id="play-main">
     <Game></Game>
   </main>;
 }

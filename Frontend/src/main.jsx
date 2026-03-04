@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import Game from './components/Game.jsx'
 import Play from './pages/Play.jsx'
 import History from './pages/History.jsx'
-import Analytics from './pages/Analytics.jsx'
 import Wiki from './pages/Wiki.jsx'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Header from './components/Header.jsx'
@@ -16,8 +15,7 @@ createRoot(document.getElementById('root')).render(
       <Header />
       <Routes>
         <Route path="/" element={<Play />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/analytics" element={<History />} />
         <Route path="/wiki" element={<Wiki />} />
       </Routes>
       <Footer />

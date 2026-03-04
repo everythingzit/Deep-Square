@@ -7,4 +7,5 @@ connection_string = os.getenv("ATLAS_URI")
 
 client = AsyncIOMotorClient(connection_string)
 database = client["deepsquare"]
-collection = database["games"]
+games_collection = database["games"]
+users_collection = database["users"]

@@ -17,7 +17,7 @@ footer {
     margin: 0;
 }
 
-/* === DARK ELEGANT === */
+/* ====== */
 footer {
     background: var(--bg-secondary);
     border-top: 1px solid var(--border-color);
@@ -25,7 +25,6 @@ footer {
 }
 
 .footer-link-container h3 {
-    font-family: 'Cinzel', serif;
     color: var(--accent-gold);
     font-size: 0.85rem;
     letter-spacing: 0.15em;
@@ -39,6 +38,8 @@ footer {
     font-size: 0.85rem;
     margin-bottom: 0.4rem;
     transition: color 0.2s ease;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
 
 .footer-link-container a:hover {
@@ -49,4 +50,5 @@ footer {
     color: var(--text-secondary);
     font-size: 0.85rem;
     margin-bottom: 0.4rem !important;
+    margin-bottom: 10px;
 }

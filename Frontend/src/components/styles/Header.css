@@ -7,7 +7,17 @@ nav {
     padding: 0.5rem 4rem;
 }
 
-/* === DARK ELEGANT === */
+#logo-img {
+    max-height: 25px;
+    margin-right: 1rem;
+}
+
+nav div {
+    display: flex;
+    align-items: center;
+}
+
+/* ====== */
 nav {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
@@ -15,7 +25,6 @@ nav {
 }
 
 nav h1 {
-    font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 1.4rem;
     color: var(--accent-gold);
@@ -42,6 +51,7 @@ nav a {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     transition: color 0.2s ease;
+    cursor: pointer;
 }
 
 nav a:hover {

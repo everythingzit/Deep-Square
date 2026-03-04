@@ -3,29 +3,28 @@
     height: 100% !important;
 }
 
-main {
+#play-main {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-    min-height: 700px;
-    padding: 4rem 0;
+    min-height: 600px;
 }
 
-#chess-game-disabled {
+/* #chess-game-disabled {
     background-image: url("../../assets/empty_board.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
-#chess-game-disabled button {
+/* #chess-game-disabled button {
     height: 3rem;
     width: 10rem;
-}
+} */
 
-section {
+#play-main section {
     width: 40%;
     border: solid 1px black;
     height: 600px;
@@ -36,8 +35,14 @@ section {
 #game-information-section {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
+    justify-content: space-between;
     align-items: stretch;
+}
+
+#username-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #move-log-container {
@@ -52,7 +57,7 @@ section {
     border: solid 1px black;
     width: 90%;
     height: 95%;
-    max-height: 465px;
+    max-height: 375px;
     overflow-y: scroll;
     display: flex;
     flex-flow: column nowrap;
@@ -124,19 +129,18 @@ section {
     padding: 0.8rem;
 }
 
-/* === DARK ELEGANT === */
-main {
+/* ====== */
+#play-main {
     background-color: var(--bg-primary);
-    padding: 3rem 0;
+    padding: 4rem 0;
 }
 
-section {
+#play-main section {
     border: 1px solid var(--border-color) !important;
     background: var(--bg-secondary);
     border-radius: 4px;
 }
 
-/* Move log */
 #move-log-container div {
     border: 1px solid var(--border-color) !important;
     background: var(--bg-primary);
@@ -167,7 +171,6 @@ section {
 
 #timer-turn-container p {
     color: var(--text-primary);
-    font-family: 'Cinzel', serif;
     font-size: 1.3rem !important;
 }
 
@@ -176,7 +179,6 @@ section {
     background: transparent;
     border: 1px solid var(--accent-gold);
     color: var(--accent-gold);
-    font-family: 'Raleway', sans-serif;
     font-weight: 600;
     font-size: 0.8rem;
     letter-spacing: 0.15em;
@@ -191,9 +193,86 @@ section {
     color: var(--bg-primary);
 }
 
-/* Board squares */
-/* Edit these in boardOptions in Game.jsx: */
-/*
-    darkSquareStyle: { backgroundColor: "#4a5568" }
-    lightSquareStyle: { backgroundColor: "#c8d5e8" }
-*/
+#username-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#username-container p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+#username-container input {
+    background: var(--bg-primary);
+    border: 1px solid var(--accent-gold);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 2px;
+    outline: none;
+    width: 60%;
+}
+
+#username-container button {
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+#username-container button:hover {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+}
+
+.status-white {
+    background: #f0f0f0 !important;
+    border: 1px solid #f0f0f0 !important;
+}
+.status-white p { color: #0d1117 !important; }
+
+.status-black {
+    background: #1a1a1a !important;
+    border: 1px solid #484f58 !important;
+}
+.status-black p { color: #e6edf3 !important; }
+
+.status-checkmate-win {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border: 1px solid #22c55e !important;
+}
+.status-checkmate-win p { color: #22c55e !important; }
+
+.status-checkmate-loss {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid #ef4444 !important;
+}
+.status-checkmate-loss p { color: #ef4444 !important; }
+
+.status-draw {
+    background: rgba(234, 179, 8, 0.15) !important;
+    border: 1px solid #eab308 !important;
+}
+.status-draw p { color: #eab308 !important; }
+
+.status-aborted {
+    background: rgba(148, 163, 184, 0.1) !important;
+    border: 1px solid #64748b !important;
+}
+.status-aborted p { color: #64748b !important; }

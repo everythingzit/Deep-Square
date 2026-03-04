@@ -2,6 +2,7 @@ import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
 import { useState, useCallback, useRef, useEffect } from "react"
 import "./styles/Game.css"
+import Loading from "../components/Loading"
 
 function Game() {
     const [game, setGame] = useState(new Chess())
@@ -12,11 +13,74 @@ function Game() {
     const [isGameActive, setIsGameActive] = useState(false)
     const [movesPlayed, setMovesPlayed] = useState([])
     const [gameTimer, setGameTimer] = useState(0)
-    const [gameStatus, setGameStatus] = useState("Game Status")
-    // const [gameStarted, setGameStarted] = useState(false)
+    const [usernameEdit, setUsernameEdit] = useState(false)
+    const [gameStatus, setGameStatus] = useState("GAME STATUS")
+    const [username, setUsername] = useState("Anonymous")
+    const [usernameInput, setUsernameInput] = useState("")
     const [playerColor, setPlayerColor] = useState("w")
+    const [loading, setLoading] = useState(true)
     const gameTimerRef = useRef(0)
     const isGameActiveRef = useRef(false)
+    const playerColorRef = useRef("w")
+    const userId = useRef(null)
+    const movesPlayedRef = useRef([])
+
+    const generateRandomUsername = () => {
+        const adjectives = ["Silent", "Swift", "Dark", "Iron", "Bold", "Clever", "Fierce", "Petit"]
+        const nouns = ["Pawn", "Knight", "Bishop", "Rook", "Queen", "King", "Gambit"]
+        const rand = (arr) => arr[Math.floor(Math.random() * arr.length)]
+        return `${rand(adjectives)}${rand(nouns)}${Math.floor(Math.random() * 100)}`
+    }
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const storedId = localStorage.getItem("user_id")
+
+                if (storedId) {
+                    userId.current = storedId
+                    const response = await fetch(`http://localhost:8000/api/users/${storedId}`)
+                    const data = await response.json()
+                    if (!data.error) setUsername(data.username)
+                } else {
+                    const generatedUsername = generateRandomUsername()
+                    const response = await fetch("http://localhost:8000/api/users", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username: generatedUsername })
+                    })
+                    const data = await response.json()
+                    localStorage.setItem("user_id", data.user_id)
+                    userId.current = data.user_id
+                    setUsername(data.username)
+                }
+            } catch (e) {
+                console.error("Error fetching user:", e)
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [])
+
+    const handleEditUsername = useCallback(() => {
+        setUsernameInput(username)
+        setUsernameEdit(true)
+    }, [username])
+
+    const handleSaveUsername = useCallback(async () => {
+        if (!usernameInput.trim()) return
+        try {
+            await fetch(`http://localhost:8000/api/users/${userId.current}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: usernameInput })
+            })
+            setUsername(usernameInput)
+            setUsernameEdit(false)
+        } catch (e) {
+            console.error("Error updating username:", e)
+        }
+    }, [usernameInput])
 
     useEffect(() => {
         if (!isGameActive) return
@@ -69,23 +133,28 @@ function Game() {
         setThinking(false)
         setOrigin(null)
         setOptions({})
-        setGameStatus(reason)
+        setGameStatus(
+            reason === "checkmate"
+                ? (game.turn() === playerColorRef.current ? "checkmate-loss" : "checkmate-win")
+                : reason
+        )
 
-        // if (reason === "aborted") return
+        if (reason === "aborted") return
 
         const gameData = {
+            user_id: userId.current,
             result: reason,
             winner: reason === "checkmate"
                 ? (game.turn() === "w" ? "black" : "white")
                 : null,
             player_color: playerColor,
             duration: gameTimerRef.current,
-            total_moves: movesPlayed.length,
-            pgn: game.pgn(),
+            total_moves: Math.ceil(movesPlayedRef.current.length / 2),
+            pgn: game.pgn({ newlineChar: " " }).replace(/\[.*?\]\s*/g, "").trim(),
             fen: game.fen(),
             date: new Date().toISOString(),
             engine_depth: 3,
-            moves: movesPlayed
+            moves: movesPlayedRef
         }
 
         fetch("http://localhost:8000/api/games", {
@@ -93,9 +162,10 @@ function Game() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(gameData)
         })
-    }, [])
+    }, [game])
 
     const getNextMove = useCallback(async (currentGame) => {
+
         setThinking(true)
 
         try {
@@ -129,7 +199,12 @@ function Game() {
             const history = gameAfterMove.history({ verbose: true }).map(move => ({ ...move }))
             const lastMove = history[history.length - 1]
             lastMove.time = formatTimer(gameTimerRef.current)
-            setMovesPlayed(prev => [...prev, lastMove]);
+
+            setMovesPlayed(prev => {
+                const updated = [...prev, lastMove]
+                movesPlayedRef.current = updated
+                return updated
+            })
         } catch (e) {
             console.error("Error getting next engine move: ", e)
         } finally {
@@ -139,6 +214,7 @@ function Game() {
 
     const newGame = useCallback(() => {
         const color = Math.random() < 0.5 ? "w" : "b"
+        playerColorRef.current = color
         setPlayerColor(color)
 
         const newBoard = new Chess()
@@ -147,11 +223,13 @@ function Game() {
         setOrigin(null)
         setOptions({})
         setThinking(false)
-        setMovesPlayed([])
         setGameTimer(0)
         setGameStatus("Game Status")
         gameTimerRef.current = 0
         setIsGameActiveSync(true)
+
+        setMovesPlayed([])
+        movesPlayedRef.current = []
 
         if (color === "b") {
             getNextMove(newBoard)
@@ -179,7 +257,12 @@ function Game() {
                 const history = gameCopy.history({ verbose: true }).map(move => ({ ...move }))
                 const lastMove = history[history.length - 1]
                 lastMove.time = formatTimer(gameTimerRef.current)
-                setMovesPlayed(prev => [...prev, lastMove]);
+
+                setMovesPlayed(prev => {
+                    const updated = [...prev, lastMove]
+                    movesPlayedRef.current = updated
+                    return updated
+                })
 
                 await getNextMove(gameCopy)
 
@@ -268,9 +351,14 @@ function Game() {
             const history = gameCopy.history({ verbose: true }).map(move => ({ ...move }))
             const lastMove = history[history.length - 1]
             lastMove.time = formatTimer(gameTimerRef.current)
-            setMovesPlayed(prev => [...prev, lastMove]);
             setOrigin(null)
             setOptions({})
+
+            setMovesPlayed(prev => {
+                const updated = [...prev, lastMove]
+                movesPlayedRef.current = updated
+                return updated
+            })
 
             getNextMove(gameCopy)
         } catch (e) {
@@ -298,6 +386,10 @@ function Game() {
         boardOrientation: playerColor === "w" ? "white" : "black"
     }
 
+    if (loading) {
+        return <main id="play-main"><Loading /></main>
+    }
+
     return (
         <>
             <section>
@@ -306,6 +398,21 @@ function Game() {
                 />
             </section>
             <section id="game-information-section">
+                <div id="username-container">
+                    <span>
+                        {!usernameEdit
+                            ? <p>{username}</p>
+                            : <input
+                                type="text"
+                                value={usernameInput}
+                                onChange={e => setUsernameInput(e.target.value)}
+                            />
+                        }
+                    </span>
+                    <button onClick={!usernameEdit ? handleEditUsername : handleSaveUsername}>
+                        {!usernameEdit ? "EDIT" : "CONFIRM"}
+                    </button>
+                </div>
                 <div id="move-log-container">
                     <div>
                         {movesPlayed.map((move, index) => (
@@ -324,9 +431,15 @@ function Game() {
                                 {formatTimer(gameTimer)}
                             </p>
                         </span>
-                        <span>
+                        <span id="game-status-box" className={
+                            !isGameActive ? `status-${gameStatus}` :
+                                game.turn() === "w" ? "status-white" : "status-black"
+                        }>
                             <p>
-                                {isGameActive ? game.turn() : gameStatus}
+                                {isGameActive
+                                    ? (game.turn() === "w" ? "WHITE TURN" : "BLACK TURN")
+                                    : gameStatus.toUpperCase().replace("-", " ")
+                                }
                             </p>
                         </span>
                     </div>

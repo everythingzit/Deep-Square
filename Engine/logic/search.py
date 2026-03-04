@@ -152,6 +152,16 @@ class Search:
 
         stand_pat = self.evaluator.evaluate(board.fen())
 
+        if board.is_check():
+            if board.turn == maximizing_player:
+                check_bonus = -50
+            else:
+                check_bonus = 50
+        else:
+            check_bonus = 0
+        
+        stand_pat += check_bonus
+
         if board.is_game_over():
             return stand_pat
         
