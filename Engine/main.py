@@ -28,6 +28,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.api_route("/api/health", methods=["GET", "HEAD"])
+async def health():
+    return { "status": "ok" }
+
 
 @app.post("/api/next-move")
 async def next_move(game: MoveReq):
